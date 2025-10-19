@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true, // enables the /app router system
-  },
-  reactStrictMode: true, // optional but recommended
+  reactStrictMode: true, // keep this on, it's good practice
 };
 
 module.exports = nextConfig;
