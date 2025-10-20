@@ -1,7 +1,10 @@
 "use client";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MessageSquare, X } from "lucide-react";
 
 export default function ChatBot() {
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
@@ -25,36 +28,76 @@ export default function ChatBot() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto my-20 bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-700">
-      <h2 className="text-2xl font-bold text-cyan-400 mb-4">AI Assistant</h2>
-      <div className="h-80 overflow-y-auto bg-gray-800 rounded-lg p-4 mb-4 space-y-3">
-        {messages.map((m, i) => (
-          <div
-            key={i}
-            className={`p-3 rounded-lg ${
-              m.role === "user"
-                ? "bg-cyan-600/30 text-right"
-                : "bg-gray-700 text-left"
-            }`}
+    <>
+      {/* Floating Square Bot Button */}
+      <motion.button
+        onClick={() => setIsOpen(!isOpen)}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-6 right-6 z-50 bg-gray-900 border-2 border-cyan-400 rounded-xl shadow-lg shadow-cyan-500/20 w-16 h-16 flex items-center justify-center"
+      >
+        {isOpen ? (
+          <X className="text-cyan-400 w-7 h-7" />
+        ) : (
+          <MessageSquare className="text-cyan-400 w-7 h-7" />
+        )}
+      </motion.button>
+
+      {/* Popup Chat Window */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-24 right-6 z-50 bg-gray-950 border border-cyan-500/40 rounded-2xl shadow-lg shadow-cyan-500/20 w-[340px] max-h-[500px] flex flex-col"
           >
-            {m.content}
-          </div>
-        ))}
-      </div>
-      <form onSubmit={sendMessage} className="flex gap-3">
-        <input
-          className="flex-1 p-3 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-cyan-400"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask me anything..."
-        />
-        <button
-          type="submit"
-          className="bg-cyan-400 text-gray-900 px-5 rounded font-bold hover:bg-cyan-500 transition-colors"
-        >
-          Send
-        </button>
-      </form>
-    </div>
+            <div className="flex justify-between items-center p-4 border-b border-gray-800 text-cyan-400 font-semibold">
+              <span>AI Assistant</span>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-gray-400 hover:text-cyan-300"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {messages.map((m, i) => (
+                <div
+                  key={i}
+                  className={`p-3 rounded-lg ${
+                    m.role === "user"
+                      ? "bg-cyan-600/30 text-right"
+                      : "bg-gray-800 text-left"
+                  }`}
+                >
+                  {m.content}
+                </div>
+              ))}
+            </div>
+
+            <form
+              onSubmit={sendMessage}
+              className="p-3 border-t border-gray-800 flex gap-2"
+            >
+              <input
+                className="flex-1 p-2 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-cyan-400 text-sm"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask me anything..."
+              />
+              <button
+                type="submit"
+                className="bg-cyan-400 text-gray-900 px-3 rounded font-bold hover:bg-cyan-300 transition-colors text-sm"
+              >
+                Send
+              </button>
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
