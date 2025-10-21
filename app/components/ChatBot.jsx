@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X } from "lucide-react";
 
@@ -8,12 +8,25 @@ export default function ChatBot() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
+  // 👇 Add an intro message when opened for the first time
+  useEffect(() => {
+    if (isOpen && messages.length === 0) {
+      setMessages([
+        {
+          role: "assistant",
+          content:
+            "👋 Hi there! I’m Clay’s AI-powered full-stack engineer assistant. Ask me about his projects, tech stack, or what makes his work unique.",
+        },
+      ]);
+    }
+  }, [isOpen]);
+
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
     const userMessage = { role: "user", content: input };
-    setMessages([...messages, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setInput("");
 
     const res = await fetch("/api/chat", {
@@ -29,7 +42,7 @@ export default function ChatBot() {
 
   return (
     <>
-      {/* Floating Square Bot Button */}
+      {/* Floating Chat Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.1 }}
