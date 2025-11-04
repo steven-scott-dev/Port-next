@@ -36,26 +36,26 @@ export default function HeroSection() {
         </motion.a>
       </motion.div>
 
-      {/* RIGHT — FRAMED VIDEO */}
-      <motion.div
-        className="relative w-full md:w-1/2 h-[55vh] mt-12 md:mt-0 rounded-2xl overflow-hidden border border-neutral-700 shadow-2xl"
-        initial={{ opacity: 0, x: 60 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <motion.video
-          src="/videos/hero.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-          initial={{ scale: 1 }}
-          animate={{ scale: 1.05 }}
-          transition={{ duration: 20, repeat: Infinity, repeatType: "reverse" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-      </motion.div>
+      {/* RIGHT SIDE — FRAMED VIDEO */}
+<motion.div
+  className="relative w-full md:w-[35%] h-[40vh] mt-10 md:mt-0 rounded-2xl overflow-hidden border border-neutral-700 shadow-xl"
+  initial={{ opacity: 0, x: 60 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 1 }}
+>
+  <motion.video
+    src="/videos/hero.mp4"
+    autoPlay
+    muted
+    loop
+    playsInline
+    className="w-full h-full object-cover"
+    initial={{ scale: 1 }}
+    animate={{ scale: 1.05 }}
+    transition={{ duration: 20, repeat: Infinity, repeatType: "reverse" }}
+  />
+  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+</motion.div>npjm 
     </section>
   );
 }

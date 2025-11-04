@@ -2,7 +2,7 @@ import "./globals.css";
 
 export const metadata = {
   title: "Clay's Portfolio",
-  description: "Full-stack developer portfolio by Steven Clay Scott",
+  description: "Building smart digital solutions for business and life with Clay Scott, a full-stack developer specializing in web and mobile applications.",
 };
 
 export default function RootLayout({ children }) {
