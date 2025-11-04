@@ -1,32 +1,32 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, X } from "lucide-react";
 
 export default function ChatBot() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  // 👇 Add an intro message when opened for the first time
+  // Auto-open after 5 seconds
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
+    const timer = setTimeout(() => {
+      setOpen(true);
       setMessages([
         {
           role: "assistant",
-          content:
-            "👋 Hi there! I’m Clay’s AI-powered full-stack engineer assistant. Ask me about his projects, tech stack, or what makes his work unique.",
+          content: "👋 Hi, I’m Kaden Bot — your smart assistant. How can I help?",
         },
       ]);
-    }
-  }, [isOpen]);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
     const userMessage = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages([...messages, userMessage]);
     setInput("");
 
     const res = await fetch("/api/chat", {
@@ -37,53 +37,56 @@ export default function ChatBot() {
 
     const data = await res.json();
     if (data?.reply)
-      setMessages((msgs) => [...msgs, { role: "assistant", content: data.reply }]);
+      setMessages((msgs) => [
+        ...msgs,
+        { role: "assistant", content: data.reply },
+      ]);
   };
 
   return (
-    <>
-      {/* Floating Chat Button */}
-      <motion.button
-        onClick={() => setIsOpen(!isOpen)}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 z-50 bg-gray-900 border-2 border-cyan-400 rounded-xl shadow-lg shadow-cyan-500/20 w-16 h-16 flex items-center justify-center"
+    <div>
+      {/* Floating chat button */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="fixed bottom-6 right-6 bg-cyan-500 text-white p-4 rounded-full shadow-lg hover:bg-cyan-400 transition z-50"
       >
-        {isOpen ? (
-          <X className="text-cyan-400 w-7 h-7" />
-        ) : (
-          <MessageSquare className="text-cyan-400 w-7 h-7" />
-        )}
-      </motion.button>
+        💬
+      </button>
 
-      {/* Popup Chat Window */}
+      {/* Chatbot window */}
       <AnimatePresence>
-        {isOpen && (
+        {open && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ duration: 0.3 }}
-            className="fixed bottom-24 right-6 z-50 bg-gray-950 border border-cyan-500/40 rounded-2xl shadow-lg shadow-cyan-500/20 w-[340px] max-h-[500px] flex flex-col"
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.4 }}
+            className="fixed bottom-20 right-6 w-80 bg-gray-900 rounded-xl shadow-2xl border border-cyan-500 overflow-hidden z-50"
           >
-            <div className="flex justify-between items-center p-4 border-b border-gray-800 text-cyan-400 font-semibold">
-              <span>AI Assistant</span>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-cyan-300"
-              >
-                ✕
+            {/* Header */}
+            <div className="flex items-center justify-between bg-cyan-500 text-gray-900 font-bold px-4 py-2">
+              <div className="flex items-center gap-2">
+                <img
+                  src="/images/kaden-bot.png"
+                  alt="Kaden Bot"
+                  className="w-8 h-8 rounded-full border border-gray-700"
+                />
+                <span>Kaden Bot</span>
+              </div>
+              <button onClick={() => setOpen(false)} className="text-xl font-bold">
+                ×
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {/* Chat messages */}
+            <div className="h-80 overflow-y-auto bg-gray-800 p-4 space-y-3 text-sm">
               {messages.map((m, i) => (
                 <div
                   key={i}
                   className={`p-3 rounded-lg ${
                     m.role === "user"
                       ? "bg-cyan-600/30 text-right"
-                      : "bg-gray-800 text-left"
+                      : "bg-gray-700 text-left"
                   }`}
                 >
                   {m.content}
@@ -91,19 +94,17 @@ export default function ChatBot() {
               ))}
             </div>
 
-            <form
-              onSubmit={sendMessage}
-              className="p-3 border-t border-gray-800 flex gap-2"
-            >
+            {/* Input box */}
+            <form onSubmit={sendMessage} className="flex gap-2 p-3 bg-gray-900">
               <input
-                className="flex-1 p-2 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-cyan-400 text-sm"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask me anything..."
+                placeholder="Type a message..."
+                className="flex-1 p-2 bg-gray-800 rounded border border-gray-700 focus:outline-none focus:border-cyan-400"
               />
               <button
                 type="submit"
-                className="bg-cyan-400 text-gray-900 px-3 rounded font-bold hover:bg-cyan-300 transition-colors text-sm"
+                className="bg-cyan-400 text-gray-900 px-4 rounded font-bold hover:bg-cyan-500 transition"
               >
                 Send
               </button>
@@ -111,6 +112,6 @@ export default function ChatBot() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
