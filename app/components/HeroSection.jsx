@@ -91,10 +91,10 @@ export default function HeroSection() {
     transition={{ duration: 1, ease: "easeInOut" }}
   >
     {[
-      { src: "/images/hero/pic1.jpg", bg: "bg-red-500", x: -120, y: -30, rotate: -5, z: 1 },
-      { src: "/images/hero/pic2.jpg", bg: "bg-pink-400", x: -40, y: 10, rotate: 2, z: 2 },
-      { src: "/images/hero/pic3.jpg", bg: "bg-blue-600", x: 40, y: -10, rotate: -3, z: 3 },
-      { src: "/images/hero/pic4.jpg", bg: "bg-lime-400", x: 120, y: 20, rotate: 6, z: 4 },
+      { src: "/images/hero/pic1.png",  x: -120, y: -30, rotate: -5, z: 1 },
+      { src: "/images/hero/pic2.png",  x: -40, y: 10, rotate: 2, z: 2 },
+      { src: "/images/hero/pic3.png",  x: 40, y: -10, rotate: -3, z: 3 },
+      { src: "/images/hero/pic4.png",  x: 120, y: 20, rotate: 6, z: 4 },
     ].map((box, i) => (
       <motion.div
         key={i}
