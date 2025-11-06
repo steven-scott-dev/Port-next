@@ -17,7 +17,7 @@ export default function HeroSection() {
         clearInterval(interval);
         setTypingDone(true);
       }
-    }, 150); // typing speed
+    }, 150);
     return () => clearInterval(interval);
   }, []);
 
@@ -25,7 +25,7 @@ export default function HeroSection() {
     <section className="flex flex-col md:flex-row items-center justify-center md:justify-between min-h-screen px-6 md:px-16 bg-black text-white overflow-hidden">
       {/* LEFT SIDE */}
       <div className="flex flex-col items-center md:items-start text-center md:text-left md:max-w-lg z-10">
-        {/* Typing name (thinner font) */}
+        {/* Typing name */}
         <h1 className="text-5xl md:text-7xl font-light mb-4 tracking-tight flex items-center gap-1">
           <span>
             {displayedText.split("").map((char, i) => {
@@ -60,12 +60,12 @@ export default function HeroSection() {
           )}
         </h1>
 
-        {/* All other content fades in together */}
+        {/* Text + Button */}
         {typingDone && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 4.0, delay: 0.7, ease: "easeInOut" }}
+            transition={{ duration: 1.5, delay: 0.7, ease: "easeInOut" }}
             className="flex flex-col items-center md:items-start"
           >
             <p className="text-gray-400 text-lg md:text-xl mb-8 leading-relaxed max-w-md">
@@ -82,23 +82,24 @@ export default function HeroSection() {
         )}
       </div>
 
-      {/* RIGHT SIDE — Overlapping 4 boxes, each new one covers the previous */}
+      {/* RIGHT SIDE — Overlapping photos */}
 {typingDone && (
   <motion.div
-    className="relative w-full md:w-[50%] h-[45vh] mt-10 md:mt-0 flex items-center justify-center overflow-visible"
+    className="relative w-full md:w-[55%] h-[55vh] mt-10 md:mt-0 flex items-center justify-center overflow-visible"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
-    transition={{ duration: 1, ease: "easeInOut" }}
+    transition={{ duration: 1.5, ease: "easeInOut" }}
   >
     {[
-      { src: "/images/hero/pic1.png",  x: -120, y: -30, rotate: -5, z: 1 },
-      { src: "/images/hero/pic2.png",  x: -40, y: 10, rotate: 2, z: 2 },
-      { src: "/images/hero/pic3.png",  x: 40, y: -10, rotate: -3, z: 3 },
-      { src: "/images/hero/pic4.png",  x: 120, y: 20, rotate: 6, z: 4 },
+      // Slight vertical curve + wider fan
+      { src: "/images/hero/pic1.png", x: -180, y: 40, rotate: -12, z: 1, scale: 0.92 },
+      { src: "/images/hero/pic2.png", x: -60, y: 10, rotate: -5,  z: 2, scale: 0.96 },
+      { src: "/images/hero/pic3.png", x: 80,  y: -10, rotate: 4,  z: 3, scale: 1.0 },
+      { src: "/images/hero/pic4.png", x: 200, y: -30, rotate: 10, z: 4, scale: 1.05 },
     ].map((box, i) => (
       <motion.div
         key={i}
-        className={`absolute w-[45%] h-[55%] ${box.bg} rounded-xl shadow-2xl border border-black/20 flex items-center justify-center text-4xl font-bold text-black`}
+        className="absolute w-[42%] h-[58%] rounded-xl shadow-2xl border border-black/20 overflow-hidden"
         style={{
           zIndex: box.z,
           backgroundImage: `url(${box.src})`,
@@ -107,34 +108,29 @@ export default function HeroSection() {
         }}
         initial={{
           opacity: 0,
-          x: 200,
-          y: 0,
-          rotate: 30,
-          scale: 0.7,
+          x: 300,
+          y: 80,
+          rotate: 20,
+          scale: 0.6,
         }}
         animate={{
           opacity: 1,
           x: box.x,
           y: box.y,
           rotate: box.rotate,
-          scale: 1,
+          scale: box.scale,
         }}
         transition={{
-          delay: 0.6 + i * 0.6, // fly in one at a time
-          duration: 1.2,
+          delay: 0.8 + i * 0.8,   // slower stagger between each
+          duration: 1.8,          // slower overall animation
           type: "spring",
-          stiffness: 90,
-          damping: 10,
+          stiffness: 70,          // gentler bounce
+          damping: 14,
         }}
-      >
-        {i + 1}
-      </motion.div>
+      />
     ))}
   </motion.div>
 )}
-
-
-
 
     </section>
   );
